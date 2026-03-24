@@ -1,19 +1,13 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-from app.routes import chat, auth
-from app.database import create_tables
-import os
-
-@app.on_event("startup")
-def startup():
-    create_tables()   # Crea las tablas automáticamente al iniciar
-
-app.include_router(auth.router, prefix="/api/v1", tags=["Auth"])
-app.include_router(chat.router, prefix="/api/v1", tags=["Chat"])
 
 # ── Carga las variables del archivo .env ANTES de todo ──
 load_dotenv()
+
+from app.routes import chat, auth
+from app.database import create_tables
 
 # ── Instancia principal de FastAPI ──
 app = FastAPI(
@@ -37,6 +31,18 @@ app.add_middleware(
     allow_methods=["*"],       # GET, POST, PUT, DELETE, etc.
     allow_headers=["*"],       # Content-Type, Authorization, etc.
 )
+
+@app.on_event("startup")
+def startup():
+    create_tables()   # Crea las tablas automáticamente al iniciar
+
+app.include_router(auth.router, prefix="/api/v1", tags=["Auth"])
+app.include_router(chat.router, prefix="/api/v1", tags=["Chat"])
+
+
+
+
+
 
 # ── Registra las rutas ──────────────────────────────────────────────────────────
 app.include_router(chat.router, prefix="/api/v1", tags=["Chat"])
