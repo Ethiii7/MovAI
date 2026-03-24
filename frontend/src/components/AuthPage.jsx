@@ -131,7 +131,7 @@ export default function AuthPage({ onLogin }) {
               }`}
             >
               <img 
-                src="//MovAIm.png" 
+                src="/MovAIm.png" 
                 alt="MovAI Logo" 
                 className="w-20 h-20 mb-6 object-contain drop-shadow-lg" 
               />
