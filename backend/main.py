@@ -21,6 +21,8 @@ app = FastAPI(
 ALLOWED_ORIGINS = [
     "http://localhost:5173",   # Vite en desarrollo
     "http://localhost:3000",   # Por si usas otro puerto
+    "https://mov-ai-three.vercel.app",
+    "https://mov-ai-three.vercel.app/",
     os.getenv("FRONTEND_URL", ""),  # Tu URL de Vercel en producción
 ]
 
