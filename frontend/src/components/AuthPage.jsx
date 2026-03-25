@@ -15,6 +15,9 @@ export default function AuthPage({ onLogin }) {
   // 👇 Función que llama a la Base de Datos
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("🛑 1. ¡Botón clickeado!");
+    console.log("🛑 2. Datos actuales del formulario:", form);
+    console.log("🛑 3. ¿Es registro?:", isSignUp);
     setLoading(true);
     setError(null);
 
@@ -26,22 +29,29 @@ export default function AuthPage({ onLogin }) {
 
       // 🔥 IMPORTANTE: Usar variable de entorno para la URL del API
       const API_URL = import.meta.env.VITE_API_URL || "movai-production-69d7.up.railway.app";
-      
+      console.log("🛑 4. URL destino:", `${API_URL}${endpoint}`);
+      console.log("🛑 5. Body que se va a enviar:", body);
+
       const res = await fetch(`${API_URL}${endpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
 
+      console.log("🛑 6. Respuesta cruda del servidor (Status):", res.status);
+
       if (!res.ok) {
         const err = await res.json();
+        console.error("❌ 7. Error devuelto por FastAPI:", err);
         setError(err.detail || "Error en la autenticación");
         return;
       }
 
       const userData = await res.json();
+      console.log("✅ 8. ¡Éxito! Datos guardados/recibidos:", userData);
       onLogin(userData); // Inicia sesión en App.jsx
     } catch (e) {
+        console.error("🔥 9. Error catastrófico (Probablemente CORS o URL mal escrita):", e);
       setError("Error de conexión con el servidor.");
     } finally {
       setLoading(false);
@@ -71,7 +81,7 @@ export default function AuthPage({ onLogin }) {
         >
           <h1 className="text-3xl font-bold text-white mb-6">Crear Cuenta</h1>
           {error && isSignUp && <p className="text-red-400 text-sm mb-2">{error}</p>}
-          <form className="w-full flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
+          <form className="w-full flex flex-col gap-4" onSubmit={handleSubmit}>
             <input
               type="text"
               placeholder="Nombre completo"
@@ -87,7 +97,7 @@ export default function AuthPage({ onLogin }) {
               placeholder="Contraseña"
               className="bg-slate-700 text-white border-none rounded-lg px-4 py-3 w-full focus:ring-2 focus:ring-sky-500 outline-none placeholder-slate-400 transition-all"
             />
-            <button disabled={loading} className="mt-4 bg-[#c240ff] hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-colors shadow-lg">
+            <button type="submit" disabled={loading} className="mt-4 bg-[#c240ff] hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-colors shadow-lg">
               {loading ? "Cargando..." : "Registrarse"}
             </button>
           </form>
@@ -101,7 +111,7 @@ export default function AuthPage({ onLogin }) {
         >
           <h1 className="text-3xl font-bold text-white md:mb-6 mb-2">Iniciar Sesión</h1>
           {error && !isSignUp && <p className="text-red-400 text-sm mb-2">{error}</p>}
-          <form className="w-full flex flex-col gap-4" onSubmit={(e) => e.preventDefault()}>
+          <form className="w-full flex flex-col gap-4" onSubmit={handleSubmit}>
             <input
               type="email"
               placeholder="Correo electrónico"
@@ -115,7 +125,7 @@ export default function AuthPage({ onLogin }) {
             {/*<a href="#" className="text-sm text-sky-400 hover:text-sky-300 text-center mt-2 transition-colors">
               ¿Olvidaste tu contraseña?
             </a>*/}
-            <button disabled={loading} className="md:mt-2 mt-0 bg-[#ffb03a] hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-colors shadow-lg">
+            <button type="submit" disabled={loading} className="md:mt-2 mt-0 bg-[#ffb03a] hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-colors shadow-lg">
               {loading ? "Cargando..." : "Entrar"}
             </button>
           </form>
