@@ -18,20 +18,24 @@ app = FastAPI(
 
 # ── CORS: lista de orígenes permitidos ─────────────────────────────────────────
 # En desarrollo: el puerto de Vite. En producción: tu dominio de Vercel.
-ALLOWED_ORIGINS = [
-    "http://localhost:5173",   # Vite en desarrollo
-    "http://localhost:3000",   # Por si usas otro puerto
+origins = [
+    "http://localhost:5173",
+    "http://localhost:3000",
     "https://mov-ai-three.vercel.app",
-    "https://mov-ai-three.vercel.app/",
-    os.getenv("FRONTEND_URL", ""),  # Tu URL de Vercel en producción
+    # NOTA: Nunca pongas la URL con diagonal al final en CORS (ej. .app/)
 ]
+
+# Obtenemos la variable de entorno, si existe y no está vacía, la agregamos
+frontend_url = os.getenv("FRONTEND_URL")
+if frontend_url:
+    origins.append(frontend_url)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],       # GET, POST, PUT, DELETE, etc.
-    allow_headers=["*"],       # Content-Type, Authorization, etc.
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 @app.on_event("startup")
@@ -43,11 +47,6 @@ app.include_router(chat.router, prefix="/api/v1", tags=["Chat"])
 
 
 
-
-
-
-# ── Registra las rutas ──────────────────────────────────────────────────────────
-app.include_router(chat.router, prefix="/api/v1", tags=["Chat"])
 
 # ── Ruta de salud: útil para verificar que el servidor está vivo ───────────────
 @app.get("/", tags=["Health"])
