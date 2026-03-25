@@ -148,7 +148,8 @@ export default function MovAIApp({ user, onLogout, onUpdateUser }) {
     setIsTyping(true);
 
   try {
-    const res = await fetch("http://127.0.0.1:8000/api/v1/chat", {
+    const API_URL = import.meta.env.VITE_API_URL || "https://movai-production-69d7.up.railway.app";
+    const res = await fetch(`${API_URL}/api/v1/chat`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
