@@ -25,7 +25,7 @@ export default function AuthPage({ onLogin }) {
         : { email: form.email, password: form.password };
 
       // 🔥 IMPORTANTE: Usar variable de entorno para la URL del API
-      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+      const API_URL = import.meta.env.VITE_API_URL || "movai-production-69d7.up.railway.app";
       
       const res = await fetch(`${API_URL}${endpoint}`, {
         method: "POST",
